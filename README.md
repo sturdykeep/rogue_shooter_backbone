@@ -4,4 +4,4 @@ Simple scrolling shooter game used for testing the performance of Backbone. Base
 
 
 # Please note
-This example is still work in progress
+This example is still work in progress. You can try a web version here: [Web example](https://sturdykeep.github.io/rogue_shooter_backbone/example/)
