@@ -1,0 +1,1 @@
+flutter build web --web-renderer canvaskit --release --base-href "/rogue_shooter_backbone/example/"
