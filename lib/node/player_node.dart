@@ -1,9 +1,11 @@
 import 'package:backbone/position_node.dart';
 import 'package:backbone/prelude/input/plugins/drag.dart';
+import 'package:backbone/prelude/input/plugins/taps.dart';
 import 'package:backbone/prelude/sprite/trait.dart';
 import 'package:backbone/prelude/transform.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
 import 'package:rogue_shooter/components/bullet_component.dart';
 import 'package:rogue_shooter/components/explosion_component.dart';
 import 'package:rogue_shooter/node/enemy_node.dart';
@@ -23,11 +25,23 @@ class PlayerNode extends PositionNode with CollisionCallbacks {
     trait.animationData = animation;
     addTrait(trait);
     addTrait(
+      TappableTrait(
+        onTapDown: (pointer) {
+          bulletCreator.timer.start();
+        },
+        onTapUp: (pointer) {
+          bulletCreator.timer.pause();
+        },
+      ),
+    );
+    addTrait(
       DraggableTrait(
         onStart: (pointer, offset) {
-          bulletCreator.timer.start();
           _dragOffset = offset;
           pointer.handled = true;
+          if (bulletCreator.timer.isRunning() == false) {
+            bulletCreator.timer.start();
+          }
           return DraggablePointerPayload(this, this);
         },
         onUpdate: (pointer) {
