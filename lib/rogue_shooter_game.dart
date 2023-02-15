@@ -5,7 +5,6 @@ import 'package:backbone/builders.dart';
 import 'package:backbone/realm_mixin.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame/sprite.dart';
 import 'package:rogue_shooter/node/player_node.dart';
@@ -22,12 +21,7 @@ import 'package:rogue_shooter/trait/clean_up_trait.dart';
 import 'package:rogue_shooter/trait/move_trait.dart';
 
 class RogueShooterGame extends FlameGame
-    with
-        HasCollisionDetection,
-        HasTappableComponents,
-        HasDraggableComponents,
-        KeyboardEvents,
-        HasRealm {
+    with HasCollisionDetection, KeyboardEvents, HasRealm {
   static const String description = '''
     A simple space shooter game used for testing performance of the collision
     detection system in Flame.
