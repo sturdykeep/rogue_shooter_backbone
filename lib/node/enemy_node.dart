@@ -4,7 +4,7 @@ import 'package:backbone/prelude/transform.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:rogue_shooter/components/explosion_component.dart';
-import 'package:rogue_shooter/rogue_shooter_game.dart';
+import 'package:rogue_shooter/resources/game_score.dart';
 import 'package:rogue_shooter/trait/clean_up_trait.dart';
 import 'package:rogue_shooter/trait/move_trait.dart';
 
@@ -40,8 +40,7 @@ class EnemyNode extends PositionNode with CollisionCallbacks {
 
   void takeHit() {
     removeFromParent();
-
-    gameRef.add(ExplosionComponent(position: position));
-    (gameRef as RogueShooterGame).increaseScore();
+    realm!.add(ExplosionComponent(position: position));
+    realm!.getResource<GameScore>().currentScore++;
   }
 }

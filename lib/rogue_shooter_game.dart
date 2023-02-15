@@ -17,8 +17,10 @@ import 'package:rogue_shooter/systems/enemy_creator_system.dart';
 import 'package:rogue_shooter/systems/move_system.dart';
 import 'package:rogue_shooter/systems/screen_text_system.dart';
 import 'package:rogue_shooter/systems/star_creator_system.dart';
+import 'package:rogue_shooter/systems/timer_system.dart';
 import 'package:rogue_shooter/trait/clean_up_trait.dart';
 import 'package:rogue_shooter/trait/move_trait.dart';
+import 'package:rogue_shooter/trait/timer_trait.dart';
 
 class RogueShooterGame extends FlameGame
     with HasCollisionDetection, KeyboardEvents, HasRealm {
@@ -55,22 +57,23 @@ class RogueShooterGame extends FlameGame
         textureSize: Vector2(32, 39),
       ),
     );
+    final bullet = await loadSpriteAnimation(
+      'rogue_shooter/bullet.png',
+      SpriteAnimationData.sequenced(
+        stepTime: 0.2,
+        amount: 4,
+        textureSize: Vector2(8, 16),
+      ),
+    );
     final sprietStorage = SpriteSheetStorage(
       startSheet,
       enemy,
       playerAnimation,
+      bullet,
     );
     realm = RealmBuilder()
         .withPlugin(defaultPlugin)
-        .withSystem(enemyCreatorSystem)
-        .withSystem(starCreatorSystem)
-        .withTrait(MoveTrait)
-        .withTrait(CleanUpTrait)
-        .withSystem(moveSystem)
-        .withSystem(cleanUpSystem)
-        .withSystem(screenTextSystem)
-        .withResource(GameScore, GameScore())
-        .withResource(Random, Random())
+        .withPlugin(_roguePlugin)
         .withResource(SpriteSheetStorage, sprietStorage)
         .build();
     add(realm);
@@ -97,7 +100,18 @@ class RogueShooterGame extends FlameGame
     realmReady = true;
   }
 
-  void increaseScore() {
-    realm.getResource<GameScore>().currentScore++;
+  void _roguePlugin(RealmBuilder builder) {
+    builder
+        .withSystem(enemyCreatorSystem)
+        .withSystem(starCreatorSystem)
+        .withTrait(MoveTrait)
+        .withTrait(CleanUpTrait)
+        .withTrait(TimerTrait)
+        .withSystem(timerSystem)
+        .withSystem(moveSystem)
+        .withSystem(cleanUpSystem)
+        .withSystem(screenTextSystem)
+        .withResource(GameScore, GameScore())
+        .withResource(Random, Random());
   }
 }

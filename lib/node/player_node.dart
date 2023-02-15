@@ -5,14 +5,15 @@ import 'package:backbone/prelude/sprite/trait.dart';
 import 'package:backbone/prelude/transform.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
-import 'package:rogue_shooter/components/bullet_component.dart';
 import 'package:rogue_shooter/components/explosion_component.dart';
+import 'package:rogue_shooter/node/bullet_node.dart';
 import 'package:rogue_shooter/node/enemy_node.dart';
+import 'package:rogue_shooter/resources/sprite_storage.dart';
+import 'package:rogue_shooter/trait/timer_trait.dart';
 
 class PlayerNode extends PositionNode with CollisionCallbacks {
-  late TimerComponent bulletCreator;
   Vector2 _dragOffset = Vector2.zero();
+  late final SpriteAnimation bullet;
 
   PlayerNode(SpriteAnimation animation)
       : super(
@@ -27,10 +28,10 @@ class PlayerNode extends PositionNode with CollisionCallbacks {
     addTrait(
       TappableTrait(
         onTapDown: (pointer) {
-          bulletCreator.timer.start();
+          get<TimerTrait>().active = true;
         },
         onTapUp: (pointer) {
-          bulletCreator.timer.pause();
+          get<TimerTrait>().active = false;
         },
       ),
     );
@@ -39,8 +40,9 @@ class PlayerNode extends PositionNode with CollisionCallbacks {
         onStart: (pointer, offset) {
           _dragOffset = offset;
           pointer.handled = true;
-          if (bulletCreator.timer.isRunning() == false) {
-            bulletCreator.timer.start();
+          final timerTrait = get<TimerTrait>();
+          if (timerTrait.active == false) {
+            timerTrait.active = true;
           }
           return DraggablePointerPayload(this, this);
         },
@@ -52,8 +54,15 @@ class PlayerNode extends PositionNode with CollisionCallbacks {
         },
         onEnd: (pointer) {
           pointer.handled = true;
-          bulletCreator.timer.pause();
+          get<TimerTrait>().active = false;
         },
+      ),
+    );
+    addTrait(
+      TimerTrait(
+        0.05,
+        _createBullet,
+        active: false,
       ),
     );
   }
@@ -66,34 +75,25 @@ class PlayerNode extends PositionNode with CollisionCallbacks {
       ),
     );
     add(CircleHitbox());
-    add(
-      bulletCreator = TimerComponent(
-        period: 0.05,
-        repeat: true,
-        autoStart: false,
-        onTick: _createBullet,
-      ),
-    );
   }
 
-  final _bulletAngles = [0.5, 0.3, 0.0, -0.5, -0.3];
+  @override
+  void onMount() {
+    super.onMount();
+    bullet = realm!.getResource<SpriteSheetStorage>().bulletAnimation;
+  }
+
+  static const _bulletAngles = [0.5, 0.3, 0.0, -0.5, -0.3];
   void _createBullet() {
-    gameRef.addAll(
+    realm!.addAll(
       _bulletAngles.map(
-        (angle) => BulletComponent(
+        (angle) => BulletNode(
           position: position + Vector2(0, -size.y / 2),
           angle: angle,
+          bullet: bullet,
         ),
       ),
     );
-  }
-
-  void beginFire() {
-    bulletCreator.timer.start();
-  }
-
-  void stopFire() {
-    bulletCreator.timer.pause();
   }
 
   void takeHit() {

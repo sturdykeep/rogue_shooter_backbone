@@ -5,9 +5,14 @@ import 'package:rogue_shooter/trait/clean_up_trait.dart';
 
 void cleanUpSystem(Realm realm) {
   final query = realm.query(Has([CleanUpTrait, TransformTrait]));
-  final border = realm.gameRef.size.y;
+  final gameSize = realm.gameRef.size;
   for (final node in query) {
-    if (node.get<TransformTrait>().position.y > border) {
+    final transform = node.get<TransformTrait>();
+    if (transform.position.y > gameSize.y) {
+      node.removeFromParent();
+    } else if (transform.position.y < 0 ||
+        transform.position.x > gameSize.x ||
+        transform.position.x + gameSize.x < 0) {
       node.removeFromParent();
     }
   }
