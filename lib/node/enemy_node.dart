@@ -39,7 +39,7 @@ class EnemyNode extends PositionNode with CollisionCallbacks {
   }
 
   void takeHit() {
-    removeFromParent();
+    transformTrait.position.y = gameRef.size.y + 1;
     realm!.add(ExplosionComponent(position: position));
     realm!.getResource<GameScore>().currentScore++;
   }

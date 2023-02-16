@@ -7,17 +7,21 @@ import 'package:rogue_shooter/node/enemy_node.dart';
 import 'package:rogue_shooter/resources/sprite_storage.dart';
 
 double timePassed = 0;
+const int totalEnemys = 800;
 
 void enemyCreatorSystem(Realm realm) {
+  if ((realm.nodesByType[EnemyNode]?.length ?? 0) >= totalEnemys) {
+    return;
+  }
   final time = realm.getResource<Time>();
   timePassed += time.delta;
+
   if (timePassed >= 0.05) {
     final storage = realm.getResource<SpriteSheetStorage>();
     timePassed = 0;
     final _halfWidth = EnemyNode.initialSize.x / 2;
     final random = realm.getResource<Random>();
     final gameRef = realm.gameRef;
-
     realm.addAll(
       List.generate(
         5,
