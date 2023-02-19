@@ -97,6 +97,7 @@ class RogueShooterGame extends FlameGame
       ),
       ScreenTextNode(Vector2(15, size.y - 100)),
     ]);
+    realm.logPerformanceData = true;
     realmReady = true;
   }
 
