@@ -44,17 +44,6 @@
 <body>
   <script>
     window.addEventListener('load', function (ev) {
-      //---- Backbone PrefMon Bridge ------
-      let webSocket = new WebSocket("ws://localhost:8080");
-      console.defaultLog = console.log.bind(console);
-      console.logs = [];
-      console.log = function () {
-        // default &  console.log()
-        console.defaultLog.apply(console, arguments);
-        // new & array data
-        webSocket.send(arguments[0]);
-      }
-      //---- Backbone PrefMon Bridge ------
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
