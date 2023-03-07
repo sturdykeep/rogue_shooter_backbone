@@ -10,7 +10,7 @@ import 'package:flutter/widgets.dart' hide Transform;
 class ScreenTextNode extends PositionEntityComponent {
   ScreenTextNode(Vector2 position)
       : super(
-          transform: Transform()..position = position,
+          transformTrait: Transform()..position = position,
         ) {
     final textTrait = TextTrait();
     textTrait.anchor = Anchor.topLeft;
