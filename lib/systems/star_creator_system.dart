@@ -4,7 +4,7 @@ import 'package:backbone/prelude/time.dart';
 import 'package:backbone/realm.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
-import 'package:rogue_shooter/node/star_node.dart';
+import 'package:rogue_shooter/entity/star_entity.dart';
 import 'package:rogue_shooter/resources/sprite_storage.dart';
 
 double starTime = 0;
@@ -14,7 +14,7 @@ void starCreatorSystem(Realm realm) {
   final gameRef = realm.gameRef;
   const starSpeed = 10;
   final starGapTime = (gameRef.size.y / gapSize) / starSpeed;
-  final time = realm.getResource<Time>();
+  final time = realm.resource<Time>();
   starTime += time.delta;
 
   if (starTime >= starGapTime) {
@@ -24,8 +24,8 @@ void starCreatorSystem(Realm realm) {
 }
 
 void createStarRow(double y, Realm realm) {
-  final storage = realm.getResource<SpriteSheetStorage>();
-  final random = realm.getResource<Random>();
+  final storage = realm.resource<SpriteSheetStorage>();
+  final random = realm.resource<Random>();
   final gameRef = realm.gameRef;
   const gapSize = 6;
   final starGap = gameRef.size.x / gapSize;
@@ -54,5 +54,7 @@ void createStar(
     stepTime: 0.1,
   )..variableStepTimes = [max(20, 100 * random.nextDouble()), 0.1, 0.1, 0.1];
 
-  realm.add(StarNode(animation: animation, position: Vector2(x, y)));
+  realm.addEntity(
+    StarEntity(animation: animation, position: Vector2(x, y)),
+  );
 }

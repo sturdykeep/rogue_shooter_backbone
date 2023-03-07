@@ -1,32 +1,38 @@
-import 'package:backbone/position_node.dart';
+import 'package:backbone/entity.dart';
 import 'package:backbone/prelude/input/plugins/drag.dart';
 import 'package:backbone/prelude/input/plugins/taps.dart';
-import 'package:backbone/prelude/sprite/trait.dart';
+import 'package:backbone/prelude/render/sprite.dart';
+import 'package:backbone/prelude/render/trait.dart';
 import 'package:backbone/prelude/transform.dart';
-import 'package:flame/collisions.dart';
-import 'package:flame/components.dart';
-import 'package:rogue_shooter/components/explosion_component.dart';
-import 'package:rogue_shooter/node/bullet_node.dart';
-import 'package:rogue_shooter/node/enemy_node.dart';
+import 'package:flame/extensions.dart';
+import 'package:flame/widgets.dart';
+import 'package:rogue_shooter/entity/bullet_entity.dart';
 import 'package:rogue_shooter/resources/sprite_storage.dart';
+import 'package:rogue_shooter/trait/collision_trait.dart';
 import 'package:rogue_shooter/trait/timer_trait.dart';
 
-class PlayerNode extends PositionNode with CollisionCallbacks {
+class PlayerEntity extends Entity /*with CollisionCallbacks*/ {
   Vector2 _dragOffset = Vector2.zero();
   late final SpriteAnimation bullet;
 
-  PlayerNode(SpriteAnimation animation)
-      : super(
-          transformTrait: TransformTrait()
-            ..size = Vector2(50, 75)
-            ..position = Vector2(100, 500)
-            ..anchor = Anchor.center,
-        ) {
-    final trait = SpriteTrait();
-    trait.animationData = animation;
-    addTrait(trait);
-    addTrait(
-      TappableTrait(
+  PlayerEntity(SpriteSheetStorage storage) : super() {
+    final transfrom = Transform()
+      ..size = Vector2(50, 75)
+      ..position = Vector2(100, 500)
+      ..anchor = Anchor.center;
+    add(transfrom);
+    add(CollisionTrait(25));
+    add(
+      Renderable(
+        visual: SpriteAnimationVisual(
+          animation: storage.playerAnimation,
+        ),
+      ),
+    );
+    bullet = storage.bulletAnimation;
+
+    add(
+      Tappable(
         onTapDown: (pointer) {
           get<TimerTrait>().active = true;
         },
@@ -35,8 +41,8 @@ class PlayerNode extends PositionNode with CollisionCallbacks {
         },
       ),
     );
-    addTrait(
-      DraggableTrait(
+    add(
+      Draggable(
         onStart: (pointer, offset) {
           _dragOffset = offset;
           pointer.handled = true;
@@ -48,7 +54,7 @@ class PlayerNode extends PositionNode with CollisionCallbacks {
         },
         onUpdate: (pointer) {
           pointer.handled = true;
-          final transform = get<TransformTrait>();
+          final transform = get<Transform>();
           transform.position = pointer.position;
           transform.position -= _dragOffset;
         },
@@ -58,7 +64,8 @@ class PlayerNode extends PositionNode with CollisionCallbacks {
         },
       ),
     );
-    addTrait(
+
+    add(
       TimerTrait(
         0.05,
         _createBullet,
@@ -66,7 +73,25 @@ class PlayerNode extends PositionNode with CollisionCallbacks {
       ),
     );
   }
+  static const _bulletAngles = [0.5, 0.3, 0.0, -0.5, -0.3];
+  void _createBullet() {
+    final transform = get<Transform>();
+    final currentPosition = transform.position;
+    final offset = -transform.size.y / 2;
 
+    _bulletAngles
+        .map(
+          (angle) => BulletEntity(
+            position: currentPosition + Vector2(0, offset),
+            angle: angle,
+            bullet: bullet,
+          ),
+        )
+        .forEach(
+          (element) => realm!.addEntity(element),
+        );
+  }
+  /*
   @override
   Future<void> onLoad() async {
     add(
@@ -83,18 +108,7 @@ class PlayerNode extends PositionNode with CollisionCallbacks {
     bullet = realm!.getResource<SpriteSheetStorage>().bulletAnimation;
   }
 
-  static const _bulletAngles = [0.5, 0.3, 0.0, -0.5, -0.3];
-  void _createBullet() {
-    realm!.addAll(
-      _bulletAngles.map(
-        (angle) => BulletNode(
-          position: position + Vector2(0, -size.y / 2),
-          angle: angle,
-          bullet: bullet,
-        ),
-      ),
-    );
-  }
+  
 
   void takeHit() {
     gameRef.add(ExplosionComponent(position: position));
@@ -107,4 +121,5 @@ class PlayerNode extends PositionNode with CollisionCallbacks {
       other.takeHit();
     }
   }
+  */
 }

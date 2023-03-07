@@ -1,3 +1,3 @@
 import 'package:backbone/trait.dart';
 
-class CleanUpTrait extends ATrait {}
+class CleanUpTrait extends Trait {}

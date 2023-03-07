@@ -5,11 +5,11 @@ import 'package:backbone/realm.dart';
 import 'package:rogue_shooter/trait/move_trait.dart';
 
 void moveSystem(Realm realm) {
-  final query = realm.query(Has([MoveTrait, TransformTrait]));
-  final time = realm.getResource<Time>();
-  for (final node in query) {
-    final transform = node.get<TransformTrait>();
-    final move = node.get<MoveTrait>();
+  final query = realm.query(Has([MoveTrait, Transform]));
+  final time = realm.resource<Time>();
+  for (final entitiy in query) {
+    final transform = entitiy.get<Transform>();
+    final move = entitiy.get<MoveTrait>();
     transform.position += move.changeByFrame.scaled(time.delta);
   }
 }

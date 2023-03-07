@@ -1,6 +1,6 @@
 import 'package:backbone/trait.dart';
 
-class TimerTrait extends ATrait {
+class TimerTrait extends Trait {
   double last = 0;
   late bool _active;
   bool get active => _active;

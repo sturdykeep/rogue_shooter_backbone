@@ -5,9 +5,9 @@ import 'package:rogue_shooter/trait/timer_trait.dart';
 
 void timerSystem(Realm realm) {
   final nodes = realm.query(Has([TimerTrait]));
-  final time = realm.getResource<Time>();
-  for (final node in nodes) {
-    final timerTrait = node.get<TimerTrait>();
+  final time = realm.resource<Time>();
+  for (final entity in nodes) {
+    final timerTrait = entity.get<TimerTrait>();
     if (timerTrait.active == false) {
       continue;
     }
