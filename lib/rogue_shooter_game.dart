@@ -7,6 +7,7 @@ import 'package:backbone/realm_mixin.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/sprite.dart';
+import 'package:rogue_shooter/entity/explosion_entity.dart';
 import 'package:rogue_shooter/entity/player_entity.dart';
 
 import 'package:rogue_shooter/node/screen_text_node.dart';
@@ -23,6 +24,7 @@ import 'package:rogue_shooter/trait/clean_up_trait.dart';
 import 'package:rogue_shooter/trait/collision_trait.dart';
 import 'package:rogue_shooter/trait/move_trait.dart';
 import 'package:rogue_shooter/trait/timer_trait.dart';
+import 'package:rogue_shooter/trait/to_remove_trait.dart';
 
 class RogueShooterGame extends FlameGame with HasCollisionDetection, HasRealm {
   static const String description = '''
@@ -66,11 +68,21 @@ class RogueShooterGame extends FlameGame with HasCollisionDetection, HasRealm {
         textureSize: Vector2(8, 16),
       ),
     );
+    final exlosion = await loadSpriteAnimation(
+      'rogue_shooter/explosion.png',
+      SpriteAnimationData.sequenced(
+        stepTime: 0.1,
+        amount: 6,
+        textureSize: Vector2.all(32),
+        loop: false,
+      ),
+    );
     final sprietStorage = SpriteSheetStorage(
       startSheet,
       enemy,
       playerAnimation,
       bullet,
+      exlosion,
     );
     /* As long as the new render is not merged this is not imporant and skiped
     
@@ -121,7 +133,10 @@ class RogueShooterGame extends FlameGame with HasCollisionDetection, HasRealm {
         .withSystem(timerSystem)
         .withSystem(moveSystem)
         .withSystem(cleanUpSystem)
+        .withTrait(ToRemoveTrait)
         .withSystem(screenTextSystem)
+        .withSystem(explosionDoneSystem)
+        .withTrait(ExplosionTrait)
         .withResource(GameScore, GameScore())
         .withResource(Random, Random());
   }

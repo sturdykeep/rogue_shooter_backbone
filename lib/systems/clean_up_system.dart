@@ -7,12 +7,14 @@ import 'package:backbone/realm.dart';
 import 'package:flame/input.dart';
 import 'package:rogue_shooter/entity/enemy_entity.dart';
 import 'package:rogue_shooter/trait/clean_up_trait.dart';
+import 'package:rogue_shooter/trait/to_remove_trait.dart';
 
 void cleanUpSystem(Realm realm) {
   final query = realm.query(Has([CleanUpTrait, Transform]));
   final gameSize = realm.gameRef.size;
   final markedToBeRemoved = <Entity>[];
 
+  markedToBeRemoved.addAll(realm.query(Has([ToRemoveTrait])));
   for (final entity in query) {
     final transform = entity.get<Transform>();
     if (transform.position.y > gameSize.y) {
@@ -34,6 +36,7 @@ void cleanUpSystem(Realm realm) {
       markedToBeRemoved.add(entity);
     }
   }
+
   //TODO Helper function on entity to remove from realm
   markedToBeRemoved.forEach((element) => realm.removeEntity(element));
 }

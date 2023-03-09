@@ -26,7 +26,7 @@ class BulletEntity extends Entity /*with CollisionCallbacks*/ {
     add(
       Renderable(
         visual: SpriteAnimationVisual(
-          animation: bullet,
+          animation: bullet.clone(),
         ),
       ),
     );

@@ -31,6 +31,7 @@ void enemyCreatorSystem(Realm realm) {
           0,
         ),
         animation: storage.enemySpriteSheet,
+        explosionAnimation: storage.explosionAnimation,
       ),
     ).forEach((element) => realm.addEntity(element));
     addedEnemies += 5;
