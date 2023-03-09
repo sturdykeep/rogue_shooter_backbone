@@ -10,7 +10,7 @@ class AABB {
   AABB(this.position, this.size);
 
   factory AABB.fromTransform(Transform transform) {
-    final globalTransform = transform.globalTransformMatrix;
+    final globalTransform = transform.globalMatrix;
     final topLeft = globalTransform.transform2(
       Vector2.zero(),
     );
