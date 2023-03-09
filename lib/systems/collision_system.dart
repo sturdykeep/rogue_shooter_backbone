@@ -36,9 +36,10 @@ void collisionSystem(Realm realm) {
   final playerAABB = entityToAABB[player]!;
   final playerCollisions = quadTreeStack.query(playerAABB);
   for (final collision in playerCollisions) {
-    final entity = AABBToEntity[collision]!;
+    final entity = AABBToEntity[collision];
     if (entity is EnemyEntity) {
       entity.takeHit();
+      AABBToEntity.remove(collision);
     }
   }
 
@@ -48,9 +49,10 @@ void collisionSystem(Realm realm) {
     final bulletAABB = entityToAABB[bullet]!;
     final bulletCollisions = quadTreeStack.query(bulletAABB);
     for (final collision in bulletCollisions) {
-      final entity = AABBToEntity[collision]!;
+      final entity = AABBToEntity[collision];
       if (entity is EnemyEntity) {
         entity.takeHit();
+        AABBToEntity.remove(collision);
         toRemove.add(bullet);
       }
     }

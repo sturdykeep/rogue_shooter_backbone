@@ -3,6 +3,7 @@ import 'package:backbone/prelude/render/sprite.dart';
 import 'package:backbone/prelude/render/trait.dart';
 import 'package:backbone/prelude/transform.dart';
 import 'package:flame/components.dart';
+import 'package:flutter/rendering.dart';
 import 'package:rogue_shooter/entity/explosion_entity.dart';
 import 'package:rogue_shooter/resources/game_score.dart';
 import 'package:rogue_shooter/trait/clean_up_trait.dart';
@@ -38,6 +39,9 @@ class EnemyEntity extends Entity /* with CollisionCallbacks */ {
 
   void takeHit() {
     final transfrom = get<Transform>();
+    if (realm!.gameRef.size.y + 1 == transfrom.position.y) {
+      debugPrint('test');
+    }
     realm!.addEntity(
       ExplosionEntity(
         position: transfrom.position.clone(),
