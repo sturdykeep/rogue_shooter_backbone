@@ -9,7 +9,6 @@ import 'package:rogue_shooter/entity/enemy_entity.dart';
 import 'package:rogue_shooter/entity/player_entity.dart';
 import 'package:rogue_shooter/quad_tree.dart';
 import 'package:rogue_shooter/trait/collision_trait.dart';
-import 'package:rogue_shooter/trait/to_remove_trait.dart';
 
 void collisionSystem(Realm realm) {
   final query = realm.query(Has([CollisionTrait]));
@@ -18,20 +17,20 @@ void collisionSystem(Realm realm) {
   final player = query.whereType<PlayerEntity>().first;
 
   // Map entities to AABBs
+  final aabbs = <AABB>[];
   final entityToAABB = <Entity, AABB>{};
   final AABBToEntity = <AABB, Entity>{};
   for (final entity in query) {
     final transform = entity.get<Transform>();
     final aabb = AABB.fromTransform(transform);
+    aabbs.add(aabb);
     entityToAABB[entity] = aabb;
     AABBToEntity[aabb] = entity;
   }
   // Build up a QuadTree
   final quadTreeStack =
       QuadTreeStack(AABB(Vector2(-200, -200), realm.gameRef.size * 1.5));
-  for (final aabb in entityToAABB.values) {
-    quadTreeStack.insert(aabb);
-  }
+  aabbs.forEach(quadTreeStack.insert);
 
   // Player <-> Enemies
   final playerAABB = entityToAABB[player]!;

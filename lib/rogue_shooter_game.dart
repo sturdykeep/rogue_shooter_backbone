@@ -24,7 +24,6 @@ import 'package:rogue_shooter/trait/clean_up_trait.dart';
 import 'package:rogue_shooter/trait/collision_trait.dart';
 import 'package:rogue_shooter/trait/move_trait.dart';
 import 'package:rogue_shooter/trait/timer_trait.dart';
-import 'package:rogue_shooter/trait/to_remove_trait.dart';
 
 class RogueShooterGame extends FlameGame with HasCollisionDetection, HasRealm {
   static const String description = '''
@@ -133,7 +132,6 @@ class RogueShooterGame extends FlameGame with HasCollisionDetection, HasRealm {
         .withSystem(timerSystem)
         .withSystem(moveSystem)
         .withSystem(cleanUpSystem)
-        .withTrait(ToRemoveTrait)
         .withSystem(screenTextSystem)
         .withSystem(explosionDoneSystem)
         .withTrait(ExplosionTrait)

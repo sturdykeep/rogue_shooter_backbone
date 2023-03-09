@@ -10,16 +10,17 @@ class AABB {
   AABB(this.position, this.size);
 
   factory AABB.fromTransform(Transform transform) {
-    final topLeft = transform.globalTransformMatrix.transform2(
+    final globalTransform = transform.globalTransformMatrix;
+    final topLeft = globalTransform.transform2(
       Vector2.zero(),
     );
-    final topRight = transform.globalTransformMatrix.transform2(
+    final topRight = globalTransform.transform2(
       Vector2(transform.size.x, 0),
     );
-    final bottomLeft = transform.globalTransformMatrix.transform2(
+    final bottomLeft = globalTransform.transform2(
       Vector2(0, transform.size.y),
     );
-    final bottomRight = transform.globalTransformMatrix.transform2(
+    final bottomRight = globalTransform.transform2(
       Vector2(transform.size.x, transform.size.y),
     );
 
@@ -73,7 +74,7 @@ class AABB {
 }
 
 class QuadTree {
-  static const int maxObjects = 10;
+  static const int maxObjects = 5;
 
   final List<AABB> objects = [];
   final AABB bounds;
