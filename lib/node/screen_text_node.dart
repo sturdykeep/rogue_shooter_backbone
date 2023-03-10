@@ -8,11 +8,13 @@ import 'package:flame/extensions.dart';
 import 'package:flutter/widgets.dart' hide Transform;
 
 class ScreenTextNode extends PositionEntityComponent {
+  late TextTrait textTrait;
+
   ScreenTextNode(Vector2 position)
       : super(
           transformTrait: Transform()..position = position,
         ) {
-    final textTrait = TextTrait();
+    textTrait = TextTrait();
     textTrait.anchor = Anchor.topLeft;
     textTrait.style = const TextStyle(
       color: Color(0xFFFFFFFF),
@@ -20,12 +22,17 @@ class ScreenTextNode extends PositionEntityComponent {
       fontSize: 24,
     );
     priority = 1;
-    entity.add(textTrait);
   }
 
   @override
   FutureOr<void> onLoad() {
     add(TextComponent());
     return super.onLoad();
+  }
+
+  @override
+  void onMount() {
+    super.onMount();
+    entity.add(textTrait);
   }
 }
