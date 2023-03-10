@@ -2,6 +2,7 @@ import 'package:backbone/entity.dart';
 import 'package:backbone/prelude/render/sprite.dart';
 import 'package:backbone/prelude/render/trait.dart';
 import 'package:backbone/prelude/transform.dart';
+import 'package:backbone/realm.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/rendering.dart';
 import 'package:rogue_shooter/entity/explosion_entity.dart';
@@ -16,10 +17,11 @@ class EnemyEntity extends Entity /* with CollisionCallbacks */ {
   final SpriteAnimation explosionAnimation;
 
   EnemyEntity({
+    required Realm realm,
     required Vector2 position,
     required SpriteAnimation animation,
     required this.explosionAnimation,
-  }) : super() {
+  }) : super(realm) {
     final transform = Transform()
       ..size = initialSize
       ..anchor = Anchor.center
@@ -42,11 +44,10 @@ class EnemyEntity extends Entity /* with CollisionCallbacks */ {
     if (realm!.gameRef.size.y + 1 == transfrom.position.y) {
       debugPrint('test');
     }
-    realm!.addEntity(
-      ExplosionEntity(
-        position: transfrom.position.clone(),
-        animation: explosionAnimation,
-      ),
+    ExplosionEntity(
+      realm: realm,
+      position: transfrom.position.clone(),
+      animation: explosionAnimation,
     );
     transfrom.position.y = realm!.gameRef.size.y + 1;
 

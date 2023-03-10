@@ -26,6 +26,7 @@ void enemyCreatorSystem(Realm realm) {
     List.generate(
       5,
       (index) => EnemyEntity(
+        realm: realm,
         position: Vector2(
           _halfWidth + (gameRef.size.x - _halfWidth) * random.nextDouble(),
           0,
@@ -33,7 +34,7 @@ void enemyCreatorSystem(Realm realm) {
         animation: storage.enemySpriteSheet,
         explosionAnimation: storage.explosionAnimation,
       ),
-    ).forEach((element) => realm.addEntity(element));
+    );
     addedEnemies += 5;
   }
 }

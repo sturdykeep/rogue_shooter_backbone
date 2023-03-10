@@ -54,7 +54,5 @@ void createStar(
     stepTime: 0.1,
   )..variableStepTimes = [max(20, 100 * random.nextDouble()), 0.1, 0.1, 0.1];
 
-  realm.addEntity(
-    StarEntity(animation: animation, position: Vector2(x, y)),
-  );
+  StarEntity(realm: realm, animation: animation, position: Vector2(x, y));
 }

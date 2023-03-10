@@ -27,9 +27,10 @@ class ExplosionTrait extends Trait {}
 
 class ExplosionEntity extends Entity {
   ExplosionEntity({
+    required Realm realm,
     required Vector2 position,
     required SpriteAnimation animation,
-  }) {
+  }) : super(realm) {
     add(ExplosionTrait());
     final transform = Transform()
       ..size = Vector2.all(50)

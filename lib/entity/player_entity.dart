@@ -4,6 +4,7 @@ import 'package:backbone/prelude/input/plugins/taps.dart';
 import 'package:backbone/prelude/render/sprite.dart';
 import 'package:backbone/prelude/render/trait.dart';
 import 'package:backbone/prelude/transform.dart';
+import 'package:backbone/realm.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/widgets.dart';
 import 'package:rogue_shooter/entity/bullet_entity.dart';
@@ -15,7 +16,7 @@ class PlayerEntity extends Entity /*with CollisionCallbacks*/ {
   Vector2 _dragOffset = Vector2.zero();
   late final SpriteAnimation bullet;
 
-  PlayerEntity(SpriteSheetStorage storage) : super() {
+  PlayerEntity(Realm realm, SpriteSheetStorage storage) : super(realm) {
     final transfrom = Transform()
       ..size = Vector2(50, 75)
       ..position = Vector2(100, 500)
@@ -79,17 +80,14 @@ class PlayerEntity extends Entity /*with CollisionCallbacks*/ {
     final currentPosition = transform.position;
     final offset = -transform.size.y / 2;
 
-    _bulletAngles
-        .map(
-          (angle) => BulletEntity(
-            position: currentPosition + Vector2(0, offset),
-            angle: angle,
-            bullet: bullet,
-          ),
-        )
-        .forEach(
-          (element) => realm!.addEntity(element),
-        );
+    _bulletAngles.forEach(
+      (angle) => BulletEntity(
+        realm: realm,
+        position: currentPosition + Vector2(0, offset),
+        angle: angle,
+        bullet: bullet,
+      ),
+    );
   }
   /*
   @override

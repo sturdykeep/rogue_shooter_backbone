@@ -104,10 +104,9 @@ class RogueShooterGame extends FlameGame with HasCollisionDetection, HasRealm {
       createStarRow(i * rows, realm);
     }
 
-    realm.addEntity(
-      player = PlayerEntity(
-        sprietStorage,
-      ),
+    player = PlayerEntity(
+      realm,
+      sprietStorage,
     );
 
     realm.addAll([

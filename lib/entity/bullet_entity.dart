@@ -2,6 +2,7 @@ import 'package:backbone/entity.dart';
 import 'package:backbone/prelude/render/sprite.dart';
 import 'package:backbone/prelude/render/trait.dart';
 import 'package:backbone/prelude/transform.dart';
+import 'package:backbone/realm.dart';
 import 'package:flame/components.dart';
 import 'package:rogue_shooter/trait/clean_up_trait.dart';
 import 'package:rogue_shooter/trait/collision_trait.dart';
@@ -13,10 +14,11 @@ class BulletEntity extends Entity /*with CollisionCallbacks*/ {
   final Vector2 deltaPosition = Vector2.zero();
 
   BulletEntity({
+    required Realm realm,
     required Vector2 position,
     required double angle,
     required SpriteAnimation bullet,
-  }) : super() {
+  }) : super(realm) {
     final transform = Transform()
       ..size = Vector2(10, 20)
       ..rotation = angle
