@@ -41,7 +41,7 @@ class EnemyEntity extends Entity /* with CollisionCallbacks */ {
 
   void takeHit() {
     final transfrom = get<Transform>();
-    if (realm!.gameRef.size.y + 1 == transfrom.position.y) {
+    if (realm.gameRef.size.y + 1 == transfrom.position.y) {
       debugPrint('test');
     }
     ExplosionEntity(
@@ -49,8 +49,8 @@ class EnemyEntity extends Entity /* with CollisionCallbacks */ {
       position: transfrom.position.clone(),
       animation: explosionAnimation,
     );
-    transfrom.position.y = realm!.gameRef.size.y + 1;
+    transfrom.position.y = realm.gameRef.size.y + 1;
 
-    realm!.resource<GameScore>().currentScore++;
+    realm.resource<GameScore>().currentScore++;
   }
 }
